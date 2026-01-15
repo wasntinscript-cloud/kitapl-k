@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Book {
+  id          String   @id @default(uuid())
+  title       String
+  author      String
+  publisher   String?
+  pageCount   Int?
+  coverImage  String?
+  rating      Int?     // 1-5 yıldız (nullable - henüz puanlanmamış olabilir)
+  status      String   @default("Okunacak") // Okunacak, Okunuyor, Okundu
+  readDate    DateTime? // Kitap okunduğunda kaydedilecek tarih
+  notes       String?  // Opsiyonel notlar
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([author])
+  @@index([publisher])
+  @@index([status])
+}
+
+model ReadingGoal {
+  id        String   @id @default(uuid())
+  year      Int      @unique
+  target    Int      // Hedef kitap sayısı
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
